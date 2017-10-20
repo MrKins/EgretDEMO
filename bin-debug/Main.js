@@ -138,20 +138,31 @@ var Main = (function (_super) {
         cloudLower.y = stageH / 7;
         this.addChild(cloudLower);
         //Bird
-        var flappyBird = this.createBitmapByName("bird_png");
-        var birdHeightDefault = stageH / 2;
+        var flappyBird = this.createBitmapByName("smallBird_png");
+        var birdYDefault = stageH / 2;
         flappyBird.anchorOffsetY = flappyBird.height / 2;
         flappyBird.anchorOffsetX = flappyBird.width / 2;
         flappyBird.x = stageW / 3;
-        flappyBird.y = birdHeightDefault;
+        flappyBird.y = birdYDefault;
         this.addChild(flappyBird);
-        //Tube
-        //Create Tube1
-        var tubeGroup1 = CreateTubeGroup(stageW, stageH);
-        var tube1Top = tubeGroup1[0];
-        this.addChild(tube1Top);
-        var tube1Bottom = tubeGroup1[1];
-        this.addChild(tube1Bottom);
+        //Pig
+        var pig = this.createBitmapByName("PIG_png");
+        pig.x = stageW;
+        pig.y = RandomPigY();
+        this.addChild(pig);
+        // //Tube
+        // //Create Tube
+        // let randomMaxHeight = stageH - (stageH / 3);
+        // let randomMinHeigth = stageH / 3;
+        // let tubeWidth = stageW / 20;
+        // let topHeight = parseInt(`${Math.random() * (randomMaxHeight - randomMinHeigth) + randomMinHeigth}`);
+        // let bottomY = topHeight + (stageH / 4);
+        // let bottomHeight = stageH - bottomY;
+        // let tubeTop: Tube = new Tube(stageW, 0, tubeWidth, topHeight);
+        // let tubeBottom: Tube = new Tube(stageW, bottomY, tubeWidth, bottomHeight);
+        // tubeTop.x = stageW;
+        // this.addChild(tubeTop);
+        // this.addChild(tubeBottom);
         //Touch Event
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
         //Frame Event
@@ -161,34 +172,41 @@ var Main = (function (_super) {
             cloudHigher.x -= 3;
             cloudLower.x -= 5;
             //Bird Drop
-            flappyBird.y += 10;
-            //Tube Move
-            tube1Top.x -= 10;
-            tube1Bottom.x -= 10;
-            if (flappyBird.rotation <= 70) {
-                flappyBird.rotation += 3;
+            if (flappyBird.y <= stageH) {
+                flappyBird.y += 30;
             }
+            //Pig Move
+            pig.x -= 30;
+            // //Tube Move
+            // tubeTop.x -= 10;
+            // tubeBottom.x -= 10;
             if (cloudLower.x <= -297) {
                 cloudLower.x = stageW;
             }
             if (cloudHigher.x <= -297) {
                 cloudHigher.x = stageW;
             }
-            if (flappyBird.y >= stageH + 87.5) {
-                ///TODO Bird Dead
-                flappyBird.y = birdHeightDefault;
+            if (pig.x <= -(pig.width / 2)) {
+                pig.x = stageW;
+                pig.y = RandomPigY();
             }
-            console.log("MOVE!");
-            //Crash Event
-            if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
+            if (flappyBird.rotation <= 70) {
+                flappyBird.rotation += 3;
+            }
+            //Crash & Out
+            if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH) {
                 console.log("Crash!!!");
+                ///TODO Bird Dead
+                removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
             }
         }
         function BirdFly() {
             //flappyBird.y -= 200;
             //使用动画会自动补充中间帧，比直接设定y要流畅
             var tw = egret.Tween.get(flappyBird);
-            tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
+            if (flappyBird.y >= 0) {
+                tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
+            }
         }
         function CreateTubeGroup(stageW, stageH) {
             var tubeGroup = new Array();
@@ -203,6 +221,10 @@ var Main = (function (_super) {
             tubeGroup.push(tubeTop);
             tubeGroup.push(tubeBottom);
             return tubeGroup;
+        }
+        function RandomPigY() {
+            var randomMax = stageH - pig.height;
+            return parseInt("" + (Math.random() * (randomMax - 0) + 0));
         }
     };
     /**

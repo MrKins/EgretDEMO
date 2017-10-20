@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,bird_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,bird_png,smallPig_png,PIG_png,smallBird_png",
 			"name": "preload"
 		}
 	],
@@ -30,6 +30,21 @@
 			"url": "assets/bird.png",
 			"type": "image",
 			"name": "bird_png"
+		},
+		{
+			"name": "smallPig_png",
+			"type": "image",
+			"url": "assets/smallPig.png"
+		},
+		{
+			"name": "PIG_png",
+			"type": "image",
+			"url": "assets/PIG.png"
+		},
+		{
+			"name": "smallBird_png",
+			"type": "image",
+			"url": "assets/smallBird.png"
 		}
 	]
 }
