@@ -135,7 +135,7 @@ class Main extends egret.DisplayObjectContainer {
      */
     private createGameScene() {
 
-         fairygui.UIPackage.addPackage("basic");
+        //fairygui.UIPackage.addPackage("basic");
 
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
