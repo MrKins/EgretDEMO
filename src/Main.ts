@@ -46,7 +46,7 @@ class Main extends egret.DisplayObjectContainer {
             // custom lifecycle plugin
 
             context.onUpdate = () => {
-                console.log('hello,world')
+                //console.log('hello,world')
             }
         })
 
@@ -138,6 +138,7 @@ class Main extends egret.DisplayObjectContainer {
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
 
+        //Cloud
         let cloudHigher = this.createBitmapByName("cloud_png");
         cloudHigher.x = stageW;
         cloudHigher.y = stageH / 20;
@@ -148,98 +149,101 @@ class Main extends egret.DisplayObjectContainer {
         cloudLower.y = stageH / 7;
         this.addChild(cloudLower);
 
-        let cloudScrollID = setInterval(CloudScroll, 30);
+        //Bird
+        let flappyBird = this.createBitmapByName("bird_png");
+        let birdHeightDefault = stageH / 2;
+        flappyBird.anchorOffsetY = flappyBird.height / 2;
+        flappyBird.anchorOffsetX = flappyBird.width / 2;
+        flappyBird.x = stageW / 3;
+        flappyBird.y = birdHeightDefault;
+        this.addChild(flappyBird);
 
-        function CloudScroll(): void {
-            // var rectCloudHigher: egret.Rectangle = cloudHigher.scrollRect;
-            // var rectCloudLower: egret.Rectangle = cloudLower.scrollRect;
+        //Tube
+        //Create Tube1
+        let tubeGroup1 = CreateTubeGroup(stageW, stageH);
+        let tube1Top: Tube = tubeGroup1[0];
+        this.addChild(tube1Top);
+        let tube1Bottom: Tube = tubeGroup1[1];
+        this.addChild(tube1Bottom);
 
+        //Create Tube2
+        let tubeGroup2 = CreateTubeGroup(stageW, stageH);
+        let tube2Top: Tube = tubeGroup2[0];
+        this.addChild(tube2Top);
+        let tube2Bottom: Tube = tubeGroup2[1];
+        this.addChild(tube2Bottom);
+
+        //Create Tube3
+        let tubeGroup3 = CreateTubeGroup(stageW, stageH);
+        let tube3Top: Tube = tubeGroup3[0];
+        this.addChild(tube3Top);
+        let tube3Bottom: Tube = tubeGroup3[1];
+        this.addChild(tube3Bottom);
+
+        //Touch Event
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
+
+        //Crash Event
+        if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
+            console.log("Crash!!!");
+        }
+
+        //Sence Move
+        let animateMoveID = setInterval(AnimateMove, 30);
+
+        function AnimateMove(): void {
+            //Cloud Move
             cloudHigher.x -= 3;
             cloudLower.x -= 5;
-
+            //Bird Drop
             flappyBird.y += 10;
+            //Tube Move
+            tube1Top.x -= 10;
+            tube1Bottom.x -= 10;
 
+            if (tube1Top.x <= stageW / 20) {
+                tube2Top.x -= 10;
+                tube2Bottom.x -= 10;
+            }
+            if (flappyBird.rotation <= 70) {
+                flappyBird.rotation += 3;
+            }
             if (cloudLower.x <= -297) {
                 cloudLower.x = stageW;
             }
             if (cloudHigher.x <= -297) {
                 cloudHigher.x = stageW;
             }
+            if (flappyBird.y >= stageH + 87.5) {
+                ///TODO Bird Dead
+                flappyBird.y = birdHeightDefault;
+            }
         }
 
-        let flappyBird = this.createBitmapByName("bird_png");
-        let birdHeightDefault = stageH / 2;
-        flappyBird.anchorOffsetY = flappyBird.height / 2;
-        flappyBird.x = stageW / 20;
-        flappyBird.y = birdHeightDefault;
-        this.addChild(flappyBird);
-
-        setInterval(BirdDrop(), 30);
-
-        function BirdDrop(): void {
-            flappyBird.y -= 10;
-
-            // let intervalID = setInterval(arguments.callee(birdHeightDefault - birdHeightPrecent), 30);
-            // if (birdHeightPrecent <= -(flappyBird.height / 2)) {
-            //     clearInterval(intervalID);
-            //     flappyBird.y = birdHeightDefault;
-            // }
+        function BirdFly(): void {
+            //flappyBird.y -= 200;
+            //使用动画会自动补充中间帧，比直接设定y要流畅
+            let tw = egret.Tween.get(flappyBird);
+            tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
         }
 
-        //默认内容
-        // let sky = this.createBitmapByName("bg_jpg");
-        // this.addChild(sky);
-        // let stageW = this.stage.stageWidth;
-        // let stageH = this.stage.stageHeight;
-        // sky.width = stageW;
-        // sky.height = stageH;
+        function CreateTubeGroup(stageW, stageH) {
+            let tubeGroup = new Array();
 
-        // let topMask = new egret.Shape();
-        // topMask.graphics.beginFill(0x000000, 0.5);
-        // topMask.graphics.drawRect(0, 0, stageW, 172);
-        // topMask.graphics.endFill();
-        // topMask.y = 33;
-        // this.addChild(topMask);
+            let randomMaxHeight = stageH - (stageH / 3);
+            let randomMinHeigth = stageH / 3;
+            let tubeWidth = stageW / 20;
+            let topHeight = parseInt(`${Math.random() * (randomMaxHeight - randomMinHeigth) + randomMinHeigth}`);
+            let bottomY = topHeight + (stageH / 4);
+            let bottomHeight = stageH - bottomY;
 
-        // let icon = this.createBitmapByName("egret_icon_png");
-        // this.addChild(icon);
-        // icon.x = 26;
-        // icon.y = 33;
+            let tubeTop: Tube = new Tube(stageW, 0, tubeWidth, topHeight);
+            let tubeBottom: Tube = new Tube(stageW, bottomY, tubeWidth, bottomHeight);
+            tubeGroup.push(tubeTop);
+            tubeGroup.push(tubeBottom);
 
-        // let line = new egret.Shape();
-        // line.graphics.lineStyle(2, 0xffffff);
-        // line.graphics.moveTo(0, 0);
-        // line.graphics.lineTo(0, 117);
-        // line.graphics.endFill();
-        // line.x = 172;
-        // line.y = 61;
-        // this.addChild(line);
-
-
-        // let colorLabel = new egret.TextField();
-        // colorLabel.textColor = 0xffffff;
-        // colorLabel.width = stageW - 172;
-        // colorLabel.textAlign = "center";
-        // colorLabel.text = "Hello Egret";
-        // colorLabel.size = 24;
-        // colorLabel.x = 172;
-        // colorLabel.y = 80;
-        // this.addChild(colorLabel);
-
-        // let textfield = new egret.TextField();
-        // this.addChild(textfield);
-        // textfield.alpha = 0;
-        // textfield.width = stageW - 172;
-        // textfield.textAlign = egret.HorizontalAlign.CENTER;
-        // textfield.size = 24;
-        // textfield.textColor = 0xffffff;
-        // textfield.x = 172;
-        // textfield.y = 135;
-        // this.textfield = textfield;
-
-        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description_json", this.startAnimation, this)
+            return tubeGroup;
+        }
     }
 
     /**
@@ -253,36 +257,28 @@ class Main extends egret.DisplayObjectContainer {
         return result;
     }
 
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    private startAnimation(result: string[]) {
-        let parser = new egret.HtmlTextParser();
-
-        let textflowArr = result.map(text => parser.parse(text));
-        let textfield = this.textfield;
-        let count = -1;
-        let change = () => {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            let textFlow = textflowArr[count];
-
-            // 切换描述内容
-            // Switch to described content
-            //默认内容
-            // textfield.textFlow = textFlow;
-            // let tw = egret.Tween.get(textfield);
-            // tw.to({ "alpha": 1 }, 200);
-            // tw.wait(2000);
-            // tw.to({ "alpha": 0 }, 200);
-            // tw.call(change, this);
-        };
-
-        change();
+    //两个DisplayObject碰撞检测
+    private HitCheck(obj1: egret.DisplayObject, obj2: egret.DisplayObject): boolean {
+        let rect1: egret.Rectangle = obj1.getBounds();
+        let rect2: egret.Rectangle = obj2.getBounds();
+        rect1.x = obj1.x;
+        rect1.y = obj1.y;
+        rect2.x = obj2.x;
+        rect2.y = obj2.y;
+        return rect1.intersects(rect2);
     }
 }
 
+class Tube extends egret.Shape {
+    public constructor(tubeX: number, tubeY: number, tubeWidth: number, tubeHeight: number) {
+        super();
+        this.DrawTube(tubeX, tubeY, tubeWidth, tubeHeight);
+    }
 
+    private DrawTube(tubeX, tubeY, tubeWidth, tubeHeight) {
+
+        this.graphics.beginFill(0xFFC300);
+        this.graphics.drawRect(tubeX, tubeY, tubeWidth, tubeHeight);
+        this.graphics.endFill();
+    }
+}
