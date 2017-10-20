@@ -25,6 +25,14 @@
     {
       "name": "promise",
       "path": "./promise"
+    },
+    {
+      "name": "rawinflate",
+      "path": "./libs/rawinflate"
+    },
+    {
+      "name": "fairygui",
+      "path": "./libs/fairygui"
     }
   ]
 }

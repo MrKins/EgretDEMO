@@ -5,7 +5,9 @@
 		"libs/modules/game/game.js",
 		"libs/modules/res/res.js",
 		"libs/modules/tween/tween.js",
-		"promise/bin/promise.js"
+		"promise/bin/promise.js",
+		"libs/rawinflate/rawinflate.js",
+		"libs/fairygui/fairygui.js"
 	],
 	"game": [
 		"bin-debug/LoadingUI.js",

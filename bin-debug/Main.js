@@ -126,6 +126,7 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
+        fairygui.UIPackage.addPackage("basic");
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         //Cloud
