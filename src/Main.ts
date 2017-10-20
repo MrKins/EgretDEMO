@@ -179,9 +179,6 @@ class Main extends egret.DisplayObjectContainer {
             }
             //Pig Move
             pig.x -= 30;
-            // //Tube Move
-            // tubeTop.x -= 10;
-            // tubeBottom.x -= 10;
 
             if (cloudLower.x <= -297) {
                 cloudLower.x = stageW;
@@ -202,7 +199,8 @@ class Main extends egret.DisplayObjectContainer {
                 console.log("Crash!!!");
 
                 ///TODO Bird Dead
-                removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+                this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
             }
         }
 
@@ -213,24 +211,6 @@ class Main extends egret.DisplayObjectContainer {
             if (flappyBird.y >= 0) {
                 tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
             }
-        }
-
-        function CreateTubeGroup(stageW, stageH) {
-            let tubeGroup = new Array();
-
-            let randomMaxHeight = stageH - (stageH / 3);
-            let randomMinHeigth = stageH / 3;
-            let tubeWidth = stageW / 20;
-            let topHeight = parseInt(`${Math.random() * (randomMaxHeight - randomMinHeigth) + randomMinHeigth}`);
-            let bottomY = topHeight + (stageH / 4);
-            let bottomHeight = stageH - bottomY;
-
-            let tubeTop: Tube = new Tube(stageW, 0, tubeWidth, topHeight);
-            let tubeBottom: Tube = new Tube(stageW, bottomY, tubeWidth, bottomHeight);
-            tubeGroup.push(tubeTop);
-            tubeGroup.push(tubeBottom);
-
-            return tubeGroup;
         }
 
         function RandomPigY(): number {

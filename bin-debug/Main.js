@@ -150,19 +150,6 @@ var Main = (function (_super) {
         pig.x = stageW;
         pig.y = RandomPigY();
         this.addChild(pig);
-        // //Tube
-        // //Create Tube
-        // let randomMaxHeight = stageH - (stageH / 3);
-        // let randomMinHeigth = stageH / 3;
-        // let tubeWidth = stageW / 20;
-        // let topHeight = parseInt(`${Math.random() * (randomMaxHeight - randomMinHeigth) + randomMinHeigth}`);
-        // let bottomY = topHeight + (stageH / 4);
-        // let bottomHeight = stageH - bottomY;
-        // let tubeTop: Tube = new Tube(stageW, 0, tubeWidth, topHeight);
-        // let tubeBottom: Tube = new Tube(stageW, bottomY, tubeWidth, bottomHeight);
-        // tubeTop.x = stageW;
-        // this.addChild(tubeTop);
-        // this.addChild(tubeBottom);
         //Touch Event
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
         //Frame Event
@@ -177,9 +164,6 @@ var Main = (function (_super) {
             }
             //Pig Move
             pig.x -= 30;
-            // //Tube Move
-            // tubeTop.x -= 10;
-            // tubeBottom.x -= 10;
             if (cloudLower.x <= -297) {
                 cloudLower.x = stageW;
             }
@@ -197,7 +181,8 @@ var Main = (function (_super) {
             if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH) {
                 console.log("Crash!!!");
                 ///TODO Bird Dead
-                removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+                this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
             }
         }
         function BirdFly() {
@@ -207,20 +192,6 @@ var Main = (function (_super) {
             if (flappyBird.y >= 0) {
                 tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
             }
-        }
-        function CreateTubeGroup(stageW, stageH) {
-            var tubeGroup = new Array();
-            var randomMaxHeight = stageH - (stageH / 3);
-            var randomMinHeigth = stageH / 3;
-            var tubeWidth = stageW / 20;
-            var topHeight = parseInt("" + (Math.random() * (randomMaxHeight - randomMinHeigth) + randomMinHeigth));
-            var bottomY = topHeight + (stageH / 4);
-            var bottomHeight = stageH - bottomY;
-            var tubeTop = new Tube(stageW, 0, tubeWidth, topHeight);
-            var tubeBottom = new Tube(stageW, bottomY, tubeWidth, bottomHeight);
-            tubeGroup.push(tubeTop);
-            tubeGroup.push(tubeBottom);
-            return tubeGroup;
         }
         function RandomPigY() {
             var randomMax = stageH - pig.height;
@@ -250,19 +221,4 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
-var Tube = (function (_super) {
-    __extends(Tube, _super);
-    function Tube(tubeX, tubeY, tubeWidth, tubeHeight) {
-        var _this = _super.call(this) || this;
-        _this.DrawTube(tubeX, tubeY, tubeWidth, tubeHeight);
-        return _this;
-    }
-    Tube.prototype.DrawTube = function (tubeX, tubeY, tubeWidth, tubeHeight) {
-        this.graphics.beginFill(0xFFC300);
-        this.graphics.drawRect(tubeX, tubeY, tubeWidth, tubeHeight);
-        this.graphics.endFill();
-    };
-    return Tube;
-}(egret.Shape));
-__reflect(Tube.prototype, "Tube");
 //# sourceMappingURL=Main.js.map
