@@ -152,26 +152,10 @@ var Main = (function (_super) {
         this.addChild(tube1Top);
         var tube1Bottom = tubeGroup1[1];
         this.addChild(tube1Bottom);
-        //Create Tube2
-        var tubeGroup2 = CreateTubeGroup(stageW, stageH);
-        var tube2Top = tubeGroup2[0];
-        this.addChild(tube2Top);
-        var tube2Bottom = tubeGroup2[1];
-        this.addChild(tube2Bottom);
-        //Create Tube3
-        var tubeGroup3 = CreateTubeGroup(stageW, stageH);
-        var tube3Top = tubeGroup3[0];
-        this.addChild(tube3Top);
-        var tube3Bottom = tubeGroup3[1];
-        this.addChild(tube3Bottom);
         //Touch Event
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
-        //Crash Event
-        if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
-            console.log("Crash!!!");
-        }
-        //Sence Move
-        var animateMoveID = setInterval(AnimateMove, 30);
+        //Frame Event
+        this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
         function AnimateMove() {
             //Cloud Move
             cloudHigher.x -= 3;
@@ -181,10 +165,6 @@ var Main = (function (_super) {
             //Tube Move
             tube1Top.x -= 10;
             tube1Bottom.x -= 10;
-            if (tube1Top.x <= stageW / 20) {
-                tube2Top.x -= 10;
-                tube2Bottom.x -= 10;
-            }
             if (flappyBird.rotation <= 70) {
                 flappyBird.rotation += 3;
             }
@@ -197,6 +177,11 @@ var Main = (function (_super) {
             if (flappyBird.y >= stageH + 87.5) {
                 ///TODO Bird Dead
                 flappyBird.y = birdHeightDefault;
+            }
+            console.log("MOVE!");
+            //Crash Event
+            if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
+                console.log("Crash!!!");
             }
         }
         function BirdFly() {
@@ -219,9 +204,6 @@ var Main = (function (_super) {
             tubeGroup.push(tubeBottom);
             return tubeGroup;
         }
-        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description_json", this.startAnimation, this);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -242,33 +224,6 @@ var Main = (function (_super) {
         rect2.x = obj2.x;
         rect2.y = obj2.y;
         return rect1.intersects(rect2);
-    };
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    Main.prototype.startAnimation = function (result) {
-        // let parser = new egret.HtmlTextParser();
-        // let textflowArr = result.map(text => parser.parse(text));
-        // let textfield = this.textfield;
-        // let count = -1;
-        // let change = () => {
-        //     count++;
-        //     if (count >= textflowArr.length) {
-        //         count = 0;
-        //     }
-        //     let textFlow = textflowArr[count];
-        //     // 切换描述内容
-        //     // Switch to described content
-        //     // 默认内容
-        //     textfield.textFlow = textFlow;
-        //     let tw = egret.Tween.get(textfield);
-        //     tw.to({ "alpha": 1 }, 200);
-        //     tw.wait(2000);
-        //     tw.to({ "alpha": 0 }, 200);
-        //     tw.call(change, this);
-        // };
-        // change();
     };
     return Main;
 }(egret.DisplayObjectContainer));

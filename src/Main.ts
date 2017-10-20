@@ -166,30 +166,10 @@ class Main extends egret.DisplayObjectContainer {
         let tube1Bottom: Tube = tubeGroup1[1];
         this.addChild(tube1Bottom);
 
-        //Create Tube2
-        let tubeGroup2 = CreateTubeGroup(stageW, stageH);
-        let tube2Top: Tube = tubeGroup2[0];
-        this.addChild(tube2Top);
-        let tube2Bottom: Tube = tubeGroup2[1];
-        this.addChild(tube2Bottom);
-
-        //Create Tube3
-        let tubeGroup3 = CreateTubeGroup(stageW, stageH);
-        let tube3Top: Tube = tubeGroup3[0];
-        this.addChild(tube3Top);
-        let tube3Bottom: Tube = tubeGroup3[1];
-        this.addChild(tube3Bottom);
-
         //Touch Event
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
-
-        //Crash Event
-        if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
-            console.log("Crash!!!");
-        }
-
-        //Sence Move
-        let animateMoveID = setInterval(AnimateMove, 30);
+        //Frame Event
+        this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
 
         function AnimateMove(): void {
             //Cloud Move
@@ -201,10 +181,6 @@ class Main extends egret.DisplayObjectContainer {
             tube1Top.x -= 10;
             tube1Bottom.x -= 10;
 
-            if (tube1Top.x <= stageW / 20) {
-                tube2Top.x -= 10;
-                tube2Bottom.x -= 10;
-            }
             if (flappyBird.rotation <= 70) {
                 flappyBird.rotation += 3;
             }
@@ -217,6 +193,12 @@ class Main extends egret.DisplayObjectContainer {
             if (flappyBird.y >= stageH + 87.5) {
                 ///TODO Bird Dead
                 flappyBird.y = birdHeightDefault;
+            }
+            console.log("MOVE!");
+
+            //Crash Event
+            if (this.HitCheck(flappyBird, tube1Top) || this.HitCheck(flappyBird, tube1Bottom)) {
+                console.log("Crash!!!");
             }
         }
 
