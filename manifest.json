@@ -11,6 +11,7 @@
 	],
 	"game": [
 		"bin-debug/LoadingUI.js",
-		"bin-debug/Main.js"
+		"bin-debug/Main.js",
+		"bin-debug/Menu.js"
 	]
 }
