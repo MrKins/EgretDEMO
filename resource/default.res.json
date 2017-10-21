@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,smallPig_png,PIG_png,smallBird_png,ForDemo3@atlas0_png,ForDemo3",
+			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,smallPig_png,PIG_png,smallBird_png,ForDemo3@atlas0_png,ForDemo3,ForDemo3@atlas02_png",
 			"name": "preload"
 		}
 	],
@@ -55,6 +55,11 @@
 			"url": "assets/ForDemo3.fui",
 			"type": "bin",
 			"name": "ForDemo3"
+		},
+		{
+			"name": "ForDemo3@atlas02_png",
+			"type": "image",
+			"url": "assets/ForDemo3@atlas0.png"
 		}
 	]
 }

@@ -138,18 +138,38 @@ class Main extends egret.DisplayObjectContainer {
         fairygui.UIPackage.addPackage("ForDemo3");//找到FairyGUI的ForDemo3包
 
         this.stage.addChild(fairygui.GRoot.inst.displayObject);//向舞台添加FairyGUI定义的DisplayObject
+
         let componentMain: fairygui.GComponent = fairygui.UIPackage.createObject("ForDemo3", "ComponentMain").asCom;//找到FairyGUI的ComponentMain组件
         fairygui.GRoot.inst.addChild(componentMain);//显示componentMain
         let buttonPause = componentMain.getChild("n0");//获取componentMain里面叫n0的button
+
+        let componentMenu: fairygui.GComponent = fairygui.UIPackage.createObject("ForDemo3", "ComponentMenu").asCom;//找到FairyGUI的ComponentMenu组件
+        let buttonRetry = componentMenu.getChild("n1");
+        let buttonContinue = componentMenu.getChild("n0");
+
         buttonPause.text = "暂停";
+        buttonContinue.text = "继续";
+        buttonRetry.text = "重试";
         buttonPause.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            new Menu();
+            fairygui.GRoot.inst.addChild(componentMenu);//显示ComponentMenu
             this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
             this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
         }, this);
-
-
-        //this.mainPanel = new MainPanel();
+        buttonContinue.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            fairygui.GRoot.inst.removeChild(componentMenu);
+            this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
+            this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+        }, this);
+        buttonRetry.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            fairygui.GRoot.inst.removeChild(componentMenu);
+            cloudHigher.x = stageW;
+            cloudLower.x = stageW;
+            flappyBird.y = birdYDefault;
+            pig.x = stageW;
+            pig.y = RandomPigY();
+            this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
+            this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+        }, this);
 
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
@@ -212,7 +232,9 @@ class Main extends egret.DisplayObjectContainer {
 
             //Crash & Out
             if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH || flappyBird.y <= 0) {
-                //Stop Animate
+                //Dead
+                fairygui.GRoot.inst.addChild(componentMenu);//显示ComponentMenu
+
                 this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
                 this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
             }
@@ -229,7 +251,6 @@ class Main extends egret.DisplayObjectContainer {
 
         function RandomPigY(): number {
             let randomMax = stageH - pig.height;
-
             return parseInt(`${Math.random() * (randomMax - 0) + 0}`);
         }
     }

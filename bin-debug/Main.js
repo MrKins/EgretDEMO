@@ -132,13 +132,32 @@ var Main = (function (_super) {
         var componentMain = fairygui.UIPackage.createObject("ForDemo3", "ComponentMain").asCom; //找到FairyGUI的ComponentMain组件
         fairygui.GRoot.inst.addChild(componentMain); //显示componentMain
         var buttonPause = componentMain.getChild("n0"); //获取componentMain里面叫n0的button
+        var componentMenu = fairygui.UIPackage.createObject("ForDemo3", "ComponentMenu").asCom; //找到FairyGUI的ComponentMenu组件
+        var buttonRetry = componentMenu.getChild("n1");
+        var buttonContinue = componentMenu.getChild("n0");
         buttonPause.text = "暂停";
+        buttonContinue.text = "继续";
+        buttonRetry.text = "重试";
         buttonPause.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            new Menu();
+            fairygui.GRoot.inst.addChild(componentMenu); //显示ComponentMenu
             _this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, _this);
             _this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, _this);
         }, this);
-        //this.mainPanel = new MainPanel();
+        buttonContinue.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            fairygui.GRoot.inst.removeChild(componentMenu);
+            _this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, _this);
+            _this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, _this);
+        }, this);
+        buttonRetry.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            fairygui.GRoot.inst.removeChild(componentMenu);
+            cloudHigher.x = stageW;
+            cloudLower.x = stageW;
+            flappyBird.y = birdYDefault;
+            pig.x = stageW;
+            pig.y = RandomPigY();
+            _this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, _this);
+            _this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, _this);
+        }, this);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         //Cloud
@@ -192,7 +211,8 @@ var Main = (function (_super) {
             }
             //Crash & Out
             if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH || flappyBird.y <= 0) {
-                //Stop Animate
+                //Dead
+                fairygui.GRoot.inst.addChild(componentMenu); //显示ComponentMenu
                 this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
                 this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
             }
