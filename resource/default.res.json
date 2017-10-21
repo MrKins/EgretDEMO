@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,bird_png,smallPig_png,PIG_png,smallBird_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,cloud_png,smallPig_png,PIG_png,smallBird_png,ForDemo3@atlas0_png,ForDemo3",
 			"name": "preload"
 		}
 	],
@@ -32,19 +32,29 @@
 			"name": "bird_png"
 		},
 		{
-			"name": "smallPig_png",
+			"url": "assets/smallPig.png",
 			"type": "image",
-			"url": "assets/smallPig.png"
+			"name": "smallPig_png"
 		},
 		{
-			"name": "PIG_png",
+			"url": "assets/PIG.png",
 			"type": "image",
-			"url": "assets/PIG.png"
+			"name": "PIG_png"
 		},
 		{
-			"name": "smallBird_png",
+			"url": "assets/smallBird.png",
 			"type": "image",
-			"url": "assets/smallBird.png"
+			"name": "smallBird_png"
+		},
+		{
+			"url": "assets/ForDemo3@atlas0.png",
+			"type": "image",
+			"name": "ForDemo3@atlas0_png"
+		},
+		{
+			"url": "assets/ForDemo3.fui",
+			"type": "bin",
+			"name": "ForDemo3"
 		}
 	]
 }

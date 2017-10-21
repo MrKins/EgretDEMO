@@ -135,7 +135,21 @@ class Main extends egret.DisplayObjectContainer {
      */
     private createGameScene() {
 
-        //fairygui.UIPackage.addPackage("basic");
+        fairygui.UIPackage.addPackage("ForDemo3");//找到FairyGUI的ForDemo3包
+
+        this.stage.addChild(fairygui.GRoot.inst.displayObject);//向舞台添加FairyGUI定义的DisplayObject
+        let componentMain: fairygui.GComponent = fairygui.UIPackage.createObject("ForDemo3", "ComponentMain").asCom;//找到FairyGUI的ComponentMain组件
+        fairygui.GRoot.inst.addChild(componentMain);//显示componentMain
+        let buttonPause = componentMain.getChild("n0");//获取componentMain里面叫n0的button
+        buttonPause.text = "暂停";
+        buttonPause.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            new Menu();
+            this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
+            this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
+        }, this);
+
+
+        //this.mainPanel = new MainPanel();
 
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
@@ -197,10 +211,8 @@ class Main extends egret.DisplayObjectContainer {
             }
 
             //Crash & Out
-            if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH) {
-                console.log("Crash!!!");
-
-                ///TODO Bird Dead
+            if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH || flappyBird.y <= 0) {
+                //Stop Animate
                 this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
                 this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
             }
