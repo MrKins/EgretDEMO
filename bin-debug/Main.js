@@ -68,10 +68,7 @@ var Main = (function (_super) {
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
     };
-    /**
-     * 配置文件加载完成,开始预加载preload资源组。
-     * configuration file loading is completed, start to pre-load the preload resource group
-     */
+    //配置文件加载完成,开始预加载preload资源组。
     Main.prototype.onConfigComplete = function (event) {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -80,10 +77,7 @@ var Main = (function (_super) {
         RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, this.onItemLoadError, this);
         RES.loadGroup("preload");
     };
-    /**
-     * preload资源组加载完成
-     * Preload resource group is loaded
-     */
+    //preload资源组加载完成
     Main.prototype.onResourceLoadComplete = function (event) {
         if (event.groupName == "preload") {
             this.stage.removeChild(this.loadingView);
@@ -94,17 +88,11 @@ var Main = (function (_super) {
             this.createGameScene();
         }
     };
-    /**
-     * 资源组加载出错
-     *  The resource group loading failed
-     */
+    //资源组加载出错
     Main.prototype.onItemLoadError = function (event) {
         console.warn("Url:" + event.resItem.url + " has failed to load");
     };
-    /**
-     * 资源组加载出错
-     *  The resource group loading failed
-     */
+    //资源组加载出错
     Main.prototype.onResourceLoadError = function (event) {
         //TODO
         console.warn("Group:" + event.groupName + " has failed to load");
@@ -112,123 +100,19 @@ var Main = (function (_super) {
         //Ignore the loading failed projects
         this.onResourceLoadComplete(event);
     };
-    /**
-     * preload资源组加载进度
-     * Loading process of preload resource group
-     */
+    //preload资源组加载进度
     Main.prototype.onResourceProgress = function (event) {
         if (event.groupName == "preload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     };
-    /**
-     * 创建游戏场景
-     * Create a game scene
-     */
+    //创建游戏场景
     Main.prototype.createGameScene = function () {
-        var _this = this;
-        fairygui.UIPackage.addPackage("ForDemo3"); //找到FairyGUI的ForDemo3包
-        this.stage.addChild(fairygui.GRoot.inst.displayObject); //向舞台添加FairyGUI定义的DisplayObject
-        var componentMain = fairygui.UIPackage.createObject("ForDemo3", "ComponentMain").asCom; //找到FairyGUI的ComponentMain组件
-        fairygui.GRoot.inst.addChild(componentMain); //显示componentMain
-        var buttonPause = componentMain.getChild("n0"); //获取componentMain里面叫n0的button
-        buttonPause.text = "暂停";
-        buttonPause.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            new Menu();
-            _this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, _this);
-            _this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, _this);
-        }, this);
-        //this.mainPanel = new MainPanel();
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        //Cloud
-        var cloudHigher = this.createBitmapByName("cloud_png");
-        cloudHigher.x = stageW;
-        cloudHigher.y = stageH / 20;
-        this.addChild(cloudHigher);
-        var cloudLower = this.createBitmapByName("cloud_png");
-        cloudLower.x = stageW;
-        cloudLower.y = stageH / 7;
-        this.addChild(cloudLower);
-        //Bird
-        var flappyBird = this.createBitmapByName("smallBird_png");
-        var birdYDefault = stageH / 2;
-        flappyBird.anchorOffsetY = flappyBird.height / 2;
-        flappyBird.anchorOffsetX = flappyBird.width / 2;
-        flappyBird.x = stageW / 3;
-        flappyBird.y = birdYDefault;
-        this.addChild(flappyBird);
-        //Pig
-        var pig = this.createBitmapByName("PIG_png");
-        pig.x = stageW;
-        pig.y = RandomPigY();
-        this.addChild(pig);
-        //Touch Event
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
-        //Frame Event
-        this.stage.addEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
-        function AnimateMove() {
-            //Cloud Move
-            cloudHigher.x -= 3;
-            cloudLower.x -= 5;
-            //Bird Drop
-            if (flappyBird.y <= stageH) {
-                flappyBird.y += 30;
-            }
-            //Pig Move
-            pig.x -= 30;
-            if (cloudLower.x <= -297) {
-                cloudLower.x = stageW;
-            }
-            if (cloudHigher.x <= -297) {
-                cloudHigher.x = stageW;
-            }
-            if (pig.x <= -(pig.width / 2)) {
-                pig.x = stageW;
-                pig.y = RandomPigY();
-            }
-            if (flappyBird.rotation <= 70) {
-                flappyBird.rotation += 3;
-            }
-            //Crash & Out
-            if (this.HitCheck(flappyBird, pig) || flappyBird.y >= stageH || flappyBird.y <= 0) {
-                //Stop Animate
-                this.stage.removeEventListener(egret.Event.ENTER_FRAME, AnimateMove, this);
-                this.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, BirdFly, this);
-            }
-        }
-        function BirdFly() {
-            //flappyBird.y -= 200;
-            //使用动画会自动补充中间帧，比直接设定y要流畅
-            var tw = egret.Tween.get(flappyBird);
-            if (flappyBird.y >= 0) {
-                tw.to({ "y": flappyBird.y - 200, "rotation": -45 }, 200);
-            }
-        }
-        function RandomPigY() {
-            var randomMax = stageH - pig.height;
-            return parseInt("" + (Math.random() * (randomMax - 0) + 0));
-        }
-    };
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    Main.prototype.createBitmapByName = function (name) {
-        var result = new egret.Bitmap();
-        var texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
-    };
-    //两个DisplayObject碰撞检测
-    Main.prototype.HitCheck = function (obj1, obj2) {
-        var rect1 = obj1.getBounds();
-        var rect2 = obj2.getBounds();
-        rect1.x = obj1.x;
-        rect1.y = obj1.y;
-        rect2.x = obj2.x;
-        rect2.y = obj2.y;
-        return rect1.intersects(rect2);
+        fairygui.UIPackage.addPackage("ForDemo3"); //找到FairyGUI的ForDemo3包
+        this.stage.addChild(fairygui.GRoot.inst.displayObject); //向舞台添加FairyGUI定义的DisplayObject
+        this.game = new Game(stageW, stageH, this.stage);
     };
     return Main;
 }(egret.DisplayObjectContainer));

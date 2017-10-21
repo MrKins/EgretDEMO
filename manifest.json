@@ -10,8 +10,9 @@
 		"libs/fairygui/fairygui.js"
 	],
 	"game": [
-		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
+		"bin-debug/Game.js",
+		"bin-debug/LoadingUI.js",
 		"bin-debug/Menu.js"
 	]
 }
